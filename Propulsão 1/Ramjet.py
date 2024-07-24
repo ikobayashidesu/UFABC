@@ -1,22 +1,47 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.style.use('_mpl-gallery')
+#Definindo as constantes de entrada:
+# t_0 = 216.7  # [K]
+# lambida_ = 1.4
+# c_p = 1004   # [J/kg K]
+# h_pr = 42800  # [J/kg]
 
-# make data
-x = np.linspace(0, 10, 100)
-y = 4 + 1 * np.sin(2 * x)
-x2 = np.linspace(0, 10, 25)
-y2 = 4 + 1 * np.sin(2 * x2)
+class Ramjet:
+    def __init__(self, m_0, t_t4, c_p, lambida_, t_0, h_pr):
+        self.m_0 = m_0
+        self.t_t4 = t_t4
+        self.c_p = c_p
+        self.lambida_ = lambida_
+        self.t_0 = t_0
+        self.h_pr = h_pr
 
-# plot
-fig, ax = plt.subplots()
+    def Tau_de_r(self):
+        tau_r_ = 1 + (((self.lambida_ - 1)/2)*(self.m_0^2))
+        self.tau_r = tau_r_
+        return tau_r_
 
-ax.plot(x2, y2 + 2.5, 'x', markeredgewidth=2)
-ax.plot(x, y, linewidth=2.0)
-ax.plot(x2, y2 - 2.5, 'o-', linewidth=2)
+    def Tau_de_lambida(self):
+        tau_lambida_ = self.t_t4/self.t_0
+        self.tau_lambida = tau_lambida_
+        return tau_lambida_
 
-ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-       ylim=(0, 8), yticks=np.arange(1, 8))
+    def empuxo(self):
+        razao_velocidade = self.Raz_vel()
+        emp = self.a_0*(razao_velocidade - self.m_0)
+        return emp
+   
+    def Razao_combustivel_ar(self):
+        tau_r_ = self.Tau_de_r()
+        tau_lambda_ = self.Tau_de_lambida()
+        f = ((self.c_p*self.t_0) /self.h_pr)*(tau_lambda_ - tau_r_) 
+        self.f_ = f
+        return f
+    
+    def Consumo_especifico(self):
+        S = self.Razao_combustivel_ar() / self.empuxo()
+        return S
+    
+motor_1 = Ramjet(2,1600,1004,1.4,216.7,42800)
 
-plt.show() #teste
+
