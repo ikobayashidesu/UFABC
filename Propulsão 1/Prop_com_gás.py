@@ -3,8 +3,8 @@ import numpy as np
 import time
 
 class Turbojet:
-    def __init__(self):
-        bora = 1
+    def __init__(self, tp):
+        bora = tp
 
     def R_(self):
         R_ = ((gamma_-1)/(gamma_))*c_p
@@ -37,12 +37,12 @@ class Turbojet:
         return tau_t_
 
     def Razao_de_velocidade(self):
-        raz_vel_ = (((2)/(gamma_ -1))*((self.Tau_de_lambida())/(self.Tau_de_r()*self.Tau_de_c()))*((self.Tau_de_c()*self.Tau_de_lambida()*self.Tau_de_r())-1))**(0.5)
+        raz_vel_ = (((2)/(gamma_ -1))*((self.Tau_de_lambida())/(self.Tau_de_r()*self.Tau_de_c()))*((self.Tau_de_c()*self.Tau_de_t()*self.Tau_de_r())-1))**(1/2)
         self.raz_vel = raz_vel_ 
         return raz_vel_ 
 
     def Empuxo(self):
-        empuxo_ = self.A_0()*(self.Razao_de_velocidade-m_0)
+        empuxo_ = self.A_0()*(self.Razao_de_velocidade()-m_0)
         self.empuxo = empuxo_
         return empuxo_
    
@@ -62,7 +62,7 @@ class Turbojet:
         return n_t_
     
     def Eficiencia_propulsiva(self):
-        n_p_ = (2*m_0)/(self.Empuxo()+m_0)
+        n_p_ = (2*m_0)/(self.Razao_de_velocidade() + m_0)
         self.n_p = n_p_
         return n_p_
     
@@ -117,32 +117,186 @@ match tipo_motor:
         m_0_min = min(lista_m_0)
         m_0_max = max(lista_m_0)
         print(" ")
-        print("Digite o menor valor do intervalo da razão de pressão de combustão:")
-        pi_c_min = float(input("Pi_c (minimo) "))
-        print(" ")
-        print("Digite o maior valor do intervalo da razão de pressão de combustão:")
-        pi_c_max = float(input("Pi_c (maximo) "))
+        print("Razoes PI_c inicial:")
+        lista_pi_C = []
+        for i in range(numero_mach):
+            print(f"faltam {numero_mach - i}:")
+            valor_pi = float(input("PI_c = "))
+            if valor_pi == 0:
+                valor_pi = 0.00000001
+            lista_pi_C.append(valor_pi)
+        pi_min = min(lista_pi_C)
+        pi_max = max(lista_pi_C)
         print(" ")
         print("-------------------------")
         print(" ")
 
-        lista_motor_m = []
-        for i in range(len(lista_m_0)):
-            motor = Turbojet()
-            lista_motor_m.append(motor)
+        lista_motor_m = {}
+        for num in lista_m_0:
+            lista_motor_m[num] = Turbojet(4)
 
         plt.figure(figsize = ((12, 6)))
         m_0 = np.linspace(m_0_min ,m_0_max) # grafico de linha (o quanto vai variar o eixo x)
+
         # Grafico 1 ----------------------------------------------------------
         plt.subplot(2, 2, 1)
-        plt.plot(m_0, motor_1.Consumo_especifico()*1000, label='1600 K')
-        plt.title("Gráfico 01", fontsize = 8)
-        plt.ylim(0, 100) #limites do eixo Y
-        plt.legend()
-        plt.xlabel('M_0')
-        plt.ylabel('S')
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Empuxo(), label=r'$\pi_c = ${}'.format(pi_c))
+            
+        
+        plt.ylim(0, 1200) #limites do eixo Y
+        plt.legend(bbox_to_anchor=(1.1, 0.2),loc='upper left', borderaxespad=0.)
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$F/ \dot m$ ' , fontsize=15)
         plt.minorticks_on() # aparece a divisão
         plt.grid()
+
+         # Grafico 2 ----------------------------------------------------------
+        plt.subplot(2, 2, 2)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Razao_combustivel_ar()/1000)
+            
+        
+        plt.ylim(0, 0.035) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$f$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+        # Grafico 3 ----------------------------------------------------------
+        plt.subplot(2, 2, 3)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Consumo_especifico()*1000)
+            
+        
+        plt.ylim(0, 100) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$S$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+        # Grafico 4 ----------------------------------------------------------
+        plt.subplot(2, 2, 4)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
+
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
+
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_total())
+            
+        
+        plt.ylim(0, 1) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$\eta$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+
+        plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
+        plt.show()
+
+        plt.figure(figsize = ((12, 6)))
+        m_0 = np.linspace(m_0_min ,m_0_max) # grafico de linha (o quanto vai variar o eixo x)
+
+        # Grafico EFICIENCIA ----------------------------------------------------------
+        # Grafico 1 ----------------------------------------------------------
+        plt.subplot(2, 2, 1)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_total(), label=r'$\pi_c = ${}'.format(pi_c))
+            
+        
+        plt.ylim(0, 1) #limites do eixo Y
+        plt.legend(bbox_to_anchor=(1.1, 0.2),loc='upper left', borderaxespad=0.)
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$\eta_t$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+         # Grafico 2 ----------------------------------------------------------
+        plt.subplot(2, 2, 2)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
+            
+        
+        plt.ylim(0, 1) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$\eta_p$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+        # Grafico 3 ----------------------------------------------------------
+        plt.subplot(2, 2, 3)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
+            
+        
+        plt.ylim(0, 1) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$\eta_o$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+        # Grafico 4 ----------------------------------------------------------
+        plt.subplot(2, 2, 4)
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
+
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
+
+        x = 0
+        for key, motor_1 in lista_motor_m.items():
+            pi_c = lista_pi_C[x]
+            x = x + 1
+            plt.plot(m_0, motor_1.Eficiencia_total())
+            
+        
+        plt.ylim(0, 1) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$\eta$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+
+        plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
+        plt.show()
+        
+        
 
 
 
