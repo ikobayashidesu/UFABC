@@ -70,11 +70,15 @@ class Turbojet:
         n_o_ = self.Eficiencia_termica()*self.Eficiencia_propulsiva()
         self.n_o = n_o_ 
         return n_o_
+    
+#***********************************************************************************************************************************************************
+    
+############################################################################################################################################################
 
 print("-------------------------")
 print("Digite o numero do motor:")
 print("1 - Turbojet")
-print("2 - Turbofan")
+print("2 - Turbo")
 print(" ")
 tipo_motor = int(input("-> "))
 print("-------------------------")
@@ -108,12 +112,14 @@ match tipo_motor:
         print("Numero de pontos de Mach inicial:")
         numero_mach = int(input("=> "))
         lista_m_0 = []
+        lista_m_0_2 = []
         for i in range(numero_mach):
             print(f"faltam {numero_mach - i}:")
             valor = float(input("M_0 = "))
             if valor == 0:
                 valor = 0.00000001
             lista_m_0.append(valor)
+            lista_m_0_2.append(valor)
         m_0_min = min(lista_m_0)
         m_0_max = max(lista_m_0)
         print(" ")
@@ -131,19 +137,16 @@ match tipo_motor:
         print("-------------------------")
         print(" ")
 
-        lista_motor_m = {}
-        for num in lista_m_0:
-            lista_motor_m[num] = Turbojet(4)
 
+        motor_1 = Turbojet(4)
         plt.figure(figsize = ((12, 6)))
         m_0 = np.linspace(m_0_min ,m_0_max) # grafico de linha (o quanto vai variar o eixo x)
 
         # Grafico 1 ----------------------------------------------------------
         plt.subplot(2, 2, 1)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
+        
+        for x in range(numero_mach):
             pi_c = lista_pi_C[x]
-            x = x + 1
             plt.plot(m_0, motor_1.Empuxo(), label=r'$\pi_c = ${}'.format(pi_c))
             
         
@@ -156,10 +159,9 @@ match tipo_motor:
 
          # Grafico 2 ----------------------------------------------------------
         plt.subplot(2, 2, 2)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        
+        for xd in range(numero_mach):
+            pi_c = lista_pi_C[xd]
             plt.plot(m_0, motor_1.Razao_combustivel_ar()/1000)
             
         
@@ -171,10 +173,9 @@ match tipo_motor:
 
         # Grafico 3 ----------------------------------------------------------
         plt.subplot(2, 2, 3)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+
+        for xa in range(numero_mach):
+            pi_c = lista_pi_C[xa]
             plt.plot(m_0, motor_1.Consumo_especifico()*1000)
             
         
@@ -186,22 +187,17 @@ match tipo_motor:
 
         # Grafico 4 ----------------------------------------------------------
         plt.subplot(2, 2, 4)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+
+        for xb in range(numero_mach):
+            pi_c = lista_pi_C[xb]
             plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
 
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        for xc in range(numero_mach):
+            pi_c = lista_pi_C[xc]
             plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
 
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        for xd in range(numero_mach):
+            pi_c = lista_pi_C[xd]
             plt.plot(m_0, motor_1.Eficiencia_total())
             
         
@@ -221,10 +217,9 @@ match tipo_motor:
         # Grafico EFICIENCIA ----------------------------------------------------------
         # Grafico 1 ----------------------------------------------------------
         plt.subplot(2, 2, 1)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+
+        for xe in range(numero_mach):
+            pi_c = lista_pi_C[xe]
             plt.plot(m_0, motor_1.Eficiencia_total(), label=r'$\pi_c = ${}'.format(pi_c))
             
         
@@ -237,10 +232,9 @@ match tipo_motor:
 
          # Grafico 2 ----------------------------------------------------------
         plt.subplot(2, 2, 2)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+
+        for xf in range(numero_mach):
+            pi_c = lista_pi_C[xf]
             plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
             
         
@@ -252,10 +246,8 @@ match tipo_motor:
 
         # Grafico 3 ----------------------------------------------------------
         plt.subplot(2, 2, 3)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        for xg in range(numero_mach):
+            pi_c = lista_pi_C[xg]
             plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
             
         
@@ -267,22 +259,16 @@ match tipo_motor:
 
         # Grafico 4 ----------------------------------------------------------
         plt.subplot(2, 2, 4)
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        for xh in range(numero_mach):
+            pi_c = lista_pi_C[xh]
             plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
 
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        for xi in range(numero_mach):
+            pi_c = lista_pi_C[xi]
             plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
 
-        x = 0
-        for key, motor_1 in lista_motor_m.items():
-            pi_c = lista_pi_C[x]
-            x = x + 1
+        for xj in range(numero_mach):
+            pi_c = lista_pi_C[xj]
             plt.plot(m_0, motor_1.Eficiencia_total())
             
         
@@ -296,6 +282,161 @@ match tipo_motor:
         plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
         plt.show()
         
+        mx = 0
+        for mx in range(numero_mach):
+            m_0 = lista_m_0_2[mx]
+            print(f"Número de Mach = {m_0}")
+            for xpi in range(numero_mach):
+                pi_c = lista_pi_C[xpi]
+                print(f"Razão de pressão do compressor = {pi_c}")
+                resultado = format(motor_1.Empuxo(), ".3f")
+                print(f"Empuxo (F) = {resultado} N/(kg/s)")
+
+                resultado = format(motor_1.Razao_combustivel_ar()/1000, ".3f")
+                print(f"Razão combustivel/ar (f) = {resultado}")
+
+                resultado = format(motor_1.Consumo_especifico()*1000, ".3f")
+                print(f"Consumo especifico de combustivel (S) = {resultado} (mg/2)/N ")
+
+                resultado = format(motor_1.Eficiencia_termica(), ".3f")
+                print(f"Eficiencia termica (n_t) = {resultado}")
+                resultado = format(motor_1.Eficiencia_propulsiva(), ".3f")
+                print(f"Eficiencia propulsiva (n_p) = {resultado}")
+                resultado = format(motor_1.Eficiencia_total(), ".3f")
+                print(f"Eficiencia total (n_o) = {resultado}")
+                
+                print(" ")
+            mx = mx + 1
+            print("-----------------------------------------")
+    
+    case 2:
+        print("--Turbojet Selecionado--")
+        print(" ")
+        print("-------------------------")
+        time.sleep(2)
+        print(" ")
+        print("Definindo as constantes de entrada:")
+        print("Temperatura do gás de entrada [K]")
+        t_0 = float(input("T_0 = "))
+        print(" ")
+        print("Valor de gamma:")
+        gamma_ = float(input("gamma = "))
+        print(" ")
+        print("Constante do gás [J/kg K]:")
+        c_p = float(input("c_p = "))
+        print(" ")
+        print("Entalpia total [kJ/kg]:")
+        h_pr = float(input("h_pr = "))
+        print(" ")
+        print("Temperatura de combustão [K]:")
+        t_t4 = float(input("T_t4 = "))
+        print(" ")
+        print(" ")
+        print("Definindo as variaveis de entrada:")
+        print("Numero de pontos de Mach inicial:")
+        numero_mach = int(input("=> "))
+        lista_m_0 = []
+        lista_m_0_2 = []
+        for i in range(numero_mach):
+            print(f"faltam {numero_mach - i}:")
+            valor = float(input("M_0 = "))
+            if valor == 0:
+                valor = 0.00000001
+            lista_m_0.append(valor)
+            lista_m_0_2.append(valor)
+        m_0_min = min(lista_m_0)
+        m_0_max = max(lista_m_0)
+        print(" ")
+        print("Razoes PI_c inicial:")
+        lista_pi_C = []
+        for i in range(numero_mach):
+            print(f"faltam {numero_mach - i}:")
+            valor_pi = float(input("PI_c = "))
+            if valor_pi == 0:
+                valor_pi = 0.00000001
+            lista_pi_C.append(valor_pi)
+        pi_min = min(lista_pi_C)
+        pi_max = max(lista_pi_C)
+        print(" ")
+        print("-------------------------")
+        print(" ")
+
+
+        motor_1 = Turbojet(4)
+        plt.figure(figsize = ((12, 6)))
+        m_0 = np.linspace(m_0_min ,m_0_max) # grafico de linha (o quanto vai variar o eixo x)
+
+        # Grafico 1 ----------------------------------------------------------
+        plt.subplot(2, 2, 1)
+        
+        for x in range(numero_mach):
+            pi_c = lista_pi_C[x]
+            plt.plot(m_0, motor_1.Empuxo(), label=r'$\pi_c = ${}'.format(pi_c))
+            
+        
+        plt.ylim(0, 1200) #limites do eixo Y
+        plt.legend(bbox_to_anchor=(1.1, 0.2),loc='upper left', borderaxespad=0.)
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$F/ \dot m$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+         # Grafico 2 ----------------------------------------------------------
+        plt.subplot(2, 2, 2)
+        
+        for xd in range(numero_mach):
+            pi_c = lista_pi_C[xd]
+            plt.plot(m_0, motor_1.Razao_combustivel_ar()/1000)
+            
+        
+        plt.ylim(0, 0.035) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$f$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+        # Grafico 3 ----------------------------------------------------------
+        plt.subplot(2, 2, 3)
+
+        for xa in range(numero_mach):
+            pi_c = lista_pi_C[xa]
+            plt.plot(m_0, motor_1.Consumo_especifico()*1000)
+            
+        
+        plt.ylim(0, 100) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$S$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+        # Grafico 4 ----------------------------------------------------------
+        plt.subplot(2, 2, 4)
+
+        for xb in range(numero_mach):
+            pi_c = lista_pi_C[xb]
+            plt.plot(m_0, motor_1.Eficiencia_propulsiva(),linestyle=':')
+
+        for xc in range(numero_mach):
+            pi_c = lista_pi_C[xc]
+            plt.plot(m_0, motor_1.Eficiencia_termica(),linestyle='--')
+
+        for xd in range(numero_mach):
+            pi_c = lista_pi_C[xd]
+            plt.plot(m_0, motor_1.Eficiencia_total())
+            
+        
+        plt.ylim(0, 1) #limites do eixo Y
+        plt.xlabel(r'$M_0$ ' , fontsize=15)
+        plt.ylabel(r'$\eta$ ' , fontsize=15)
+        plt.minorticks_on() # aparece a divisão
+        plt.grid()
+
+
+        plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
+        plt.show()
+
+            
+
         
 
 
@@ -305,78 +446,4 @@ match tipo_motor:
     case _:
         print("-- Nâo existe essa opção --")
 
-
-
-
-
-
-
-
-
-
-
-
-# motor_1 = Ramjet(temp_4,calor_especifico,gamma,temp_0,entalpia_total)
-# motor_2 = Ramjet(1900,calor_especifico,gamma,temp_0,entalpia_total)
-# motor_3 = Ramjet(2200,calor_especifico,gamma,temp_0,entalpia_total)
-
-# plt.figure(figsize = ((12, 6)))
-# mach = np.linspace(0 ,7) # grafico de linha (o quanto vai variar o eixo x)
-
-# # Grafico 1 ----------------------------------------------------------
-# plt.subplot(2, 2, 1)
-# plt.plot(mach, motor_1.Consumo_especifico()*1000, label='1600 K')
-# plt.plot(mach, motor_2.Consumo_especifico()*1000, label='1900 K')
-# plt.plot(mach, motor_3.Consumo_especifico()*1000, label='2200 K')
-# plt.title("Gráfico 01", fontsize = 10)
-# plt.ylim(40, 100) #limites do eixo Y
-# plt.legend()
-# plt.xlabel('M_0')
-# plt.ylabel('S')
-# plt.minorticks_on() # aparece a divisão
-# plt.grid()
-
-# # Grafico 2 ----------------------------------------------------------
-# plt.subplot(2, 2, 2)
-# plt.plot(mach, motor_1.Razao_combustivel_ar()/1000, label='1600 K')
-# plt.plot(mach, motor_2.Razao_combustivel_ar()/1000, label='1900 K')
-# plt.plot(mach, motor_3.Razao_combustivel_ar()/1000, label='2200 K')
-# plt.title("Gráfico 02", fontsize = 10)
-# plt.ylim(0, 0.05) #limites do eixo Y
-# plt.legend()
-# plt.xlabel('M_0')
-# plt.ylabel('f')
-# plt.minorticks_on() # aparece a divisão
-# plt.grid()
-
-# # Grafico 3 ----------------------------------------------------------
-# plt.subplot(2, 2, 3)
-# plt.plot(mach, motor_1.Empuxo(), label='1600 K')
-# plt.plot(mach, motor_2.Empuxo(), label='1900 K')
-# plt.plot(mach, motor_3.Empuxo(), label='2200 K')
-# plt.title("Gráfico 03", fontsize = 10)
-# plt.ylim(0, 1000) #limites do eixo Y
-# plt.legend()
-# plt.xlabel('M_0')
-# plt.ylabel('F/m')
-# plt.minorticks_on() # aparece a divisão
-# plt.grid()
-
-# # Grafico 4 ----------------------------------------------------------
-# plt.subplot(2, 2, 4)
-# plt.plot(mach, motor_1.Eficiencia_propulsiva()*100, label='1600 K')
-# plt.plot(mach, motor_2.Eficiencia_propulsiva()*100, label='1900 K')
-# plt.plot(mach, motor_3.Eficiencia_propulsiva()*100, label='2200 K')
-# plt.plot(mach, motor_1.Eficiencia_total()*100, label='1600 K')
-# plt.plot(mach, motor_2.Eficiencia_total()*100, label='1900 K')
-# plt.plot(mach, motor_3.Eficiencia_total()*100, label='2200 K')
-# plt.title("Gráfico 04", fontsize = 10)
-# plt.ylim(0, 100) #limites do eixo Y
-# plt.legend()
-# plt.xlabel('M_0')
-# plt.ylabel('N')
-# plt.minorticks_on() # aparece a divisão
-# plt.grid()
-
-# plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.35)
-# plt.show()
+      
