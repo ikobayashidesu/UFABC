@@ -1,6 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+turbofan_mix_pi_f_ = True
+turbofan_mix_alpha_ = False
+
+
 class Turbofan_mix_pi_f:
     def __init__(self):
         s = 1
@@ -86,7 +91,7 @@ class Turbofan_mix_pi_f:
         return s_
     
     def Eficiencia_termica(self):
-        n_t_ = 4
+        n_t_ = ((gamma-1)/(2))*((c_p*t_0)/(self.Razao_de_combustivel_ar_o()*h_pr))*((self.Razao_de_velocidade()**2)-(m_0**2))
         self.n_t = n_t_
         return n_t_
     
@@ -99,23 +104,88 @@ class Turbofan_mix_pi_f:
         n_o_ = self.Eficiencia_termica()*self.Eficiencia_propulsiva()
         self.n_o = n_o_ 
         return n_o_
+
+###################################################################################################################################################################
+
+# TRBOFAN COM ESCOAMENTO MISTURADO 
+# SEM PÓS COMBUSTOR
+# COM RAZÃO DE PRESSÃO DO FAN
+
+if turbofan_mix_pi_f_:
+
+    motor = Turbofan_mix_pi_f()
+
+    # Variaveis de entrada:
+    m_0 = 2
+    lista_pi_f = [2,5]
+    pi_c = 20
+    lista_t_t4 = [3000,4000] #[R]
+
+    # Constantes de entrada:
+    gamma = 1.4 
+    t_0 = 390         #[R]      
+    c_p = 0.24    #[Btu/lbm R]
+    h_pr = 18400   #[Btu/lbm]
+
+    #conversões:
+    t_0 = t_0/1.8                 #[K]
+    for i in range(len(lista_t_t4)):
+      lista_t_t4[i] = lista_t_t4[i]/1.8       #[K]
+    c_p  = (c_p  * 4.1868)      #[kJ/kg K]
+    c_p  = c_p * 1000              #[J/kg K]
+    h_pr = h_pr * 2.326           #[kJ/kg]
+    h_pr = h_pr * 1000              #[J/kg]
+
+    # Tabelas:
+    plt.figure(figsize = ((12, 6)))
+    t_t4 = np.linspace(min(lista_t_t4) ,max(lista_t_t4))  #Limites do eixo X
+
+    # Grafico 1 ----------------------------------------------------------
+    plt.subplot(2, 2, 1)
+    for i in range(len(lista_pi_f)):
+        pi_f = lista_pi_f[i]
+        plt.plot(t_t4, motor.Alpha(), label=r'$\pi_f = ${}'.format(pi_f))
+            
+    plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
+    plt.xlabel(r'$T_{t4} [K]$ ' , fontsize=15)
+    plt.ylabel(r'$\alpha$ ' , fontsize=15)
+    plt.minorticks_on() # aparece a divisão
+    plt.grid()
+
+    # Grafico 2 ----------------------------------------------------------
+    plt.subplot(2, 2, 2)
+    for i in range(len(lista_pi_f)):
+        pi_f = lista_pi_f[i]
+        plt.plot(t_t4, motor.Empuxo(), label=r'$\pi_f = ${}'.format(pi_f))
+            
+    plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
+    plt.xlabel(r'$T_{t4} [K]$ ' , fontsize=15)
+    plt.ylabel(r'$F/ \dot m [N / (kg /s)]$ ' , fontsize=15)
+    plt.minorticks_on() # aparece a divisão
+    plt.grid()
+
+    # Grafico 3 ----------------------------------------------------------
+    plt.subplot(2, 2, 3)
+    for i in range(len(lista_pi_f)):
+        pi_f = lista_pi_f[i]
+        plt.plot(t_t4, motor.Consumo_especifico(), label=r'$\pi_f = ${}'.format(pi_f))
+            
+    plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
+    plt.xlabel(r'$T_{t4} [K]$ ' , fontsize=15)
+    plt.ylabel(r'$S [(mg/s) / N]$ ' , fontsize=15)
+    plt.minorticks_on() # aparece a divisão
+    plt.grid()
+
+    # Plot Grafico ----------------------------------------------------------
+    plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
+    plt.show()
     
-m_0 = 0.9
-pi_f = 4
-pi_c = 25
 
-t_0 = 216.7
-gamma = 1.4
-c_p = 1004.832
-h_pr = 42798400
-t_t4 = 1666.7
+    print(motor.Alpha())
+    print(motor.Razao_combustivel_ar())
+    print(motor.Razao_de_combustivel_ar_o())
+    print(motor.Empuxo())
+    print(motor.Consumo_especifico()*10)
 
-motor = Turbofan_mix_pi_f()
-print(motor.Alpha())
-print(motor.Razao_combustivel_ar())
-print(motor.Razao_de_combustivel_ar_o())
-print(motor.Empuxo())
-print(motor.Consumo_especifico())
-
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
-#***********************************************************************************************************************************************************
