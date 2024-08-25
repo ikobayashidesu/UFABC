@@ -126,14 +126,14 @@ lista_pi_c = [2,14]
 
 # Constantes de entrada em SI:
 t_0 = 216.7         #[K]
-t_t4 = 1800        #[K]
+t_t4 = 1666.7        #[K]
 t_t7 = 1944.4       #[K]   
-c_pc = 1004    #[J/kg K]
-c_pt = 1239    #[J/kg K]
+c_pc = 1004.832    #[J/kg K]
+c_pt = 1155.5568    #[J/kg K]
 c_pab = 1235.106    #[J/kg K]
-h_pr = 42800000      #[J/kg]
+h_pr = 42798400      #[J/kg]
 gamma_c = 1.4 
-gamma_t = 1.3
+gamma_t = 1.33
 gamma_ab = 1.3 
 pi_dmax = 0.98
 pi_b = 0.98
@@ -145,6 +145,7 @@ n_b = 0.99
 n_ab = 0.96
 n_m = 0.98
 p_0Ip_9 = 1
+pi_c_ = 10
 
 convert = False
 if convert:
@@ -176,11 +177,17 @@ print("|-------------------------------------------|")
 dado = format(t_t4, ".3f")
 print("%s\t%s\t%s" % ("| T_{t4}",dado,"K"))
 print("|-------------------------------------------|")
+dado = format(t_t7, ".3f")
+print("%s\t%s\t%s" % ("| T_{t7}",dado,"K"))
+print("|-------------------------------------------|")
 dado = format(c_pc, ".3f")
 print("%s\t%s\t%s" % ("| c_{pc}",dado,"[J/kg K]"))
 print("|-------------------------------------------|")
 dado = format(c_pt, ".3f")
 print("%s\t%s\t%s" % ("| c_{pt}",dado,"[J/kg K]"))
+print("|-------------------------------------------|")
+dado = format(c_pab, ".3f")
+print("%s\t%s\t%s" % ("| c_{pab}",dado,"[J/kg K]"))
 print("|-------------------------------------------|")
 dado = format(h_pr, ".3f")
 print("%s\t%s\t%s" % ("| h_{pr}",dado,"[J/kg]"))
@@ -191,11 +198,17 @@ print("|-------------------------------------------|")
 dado = format(gamma_t, ".3f")
 print("%s\t%s\t\t%s" % ("| gamma_t",dado," "))
 print("|-------------------------------------------|")
+dado = format(gamma_ab, ".3f")
+print("%s\t%s\t\t%s" % ("| gamma_{ab}",dado," "))
+print("|-------------------------------------------|")
 dado = format(pi_dmax, ".3f")
 print("%s\t%s\t\t%s" % ("| pi_{dmax}",dado," "))
 print("|-------------------------------------------|")
 dado = format(pi_b, ".3f")
 print("%s\t\t%s\t\t%s" % ("| pi_b",dado," "))
+print("|-------------------------------------------|")
+dado = format(pi_ab, ".3f")
+print("%s\t%s\t\t%s" % ("| pi_{ab}",dado," "))
 print("|-------------------------------------------|")
 dado = format(pi_n, ".3f")
 print("%s\t\t%s\t\t%s" % ("| pi_n",dado," "))
@@ -208,6 +221,9 @@ print("%s\t\t%s\t\t%s" % ("| e_t",dado," "))
 print("|-------------------------------------------|")
 dado = format(n_b, ".3f")
 print("%s\t\t%s\t\t%s" % ("| eta_b",dado," "))
+print("|-------------------------------------------|")
+dado = format(n_ab, ".3f")
+print("%s\t%s\t\t%s" % ("| eta_{ab}",dado," "))
 print("|-------------------------------------------|")
 dado = format(n_m, ".3f")
 print("%s\t\t%s\t\t%s" % ("| eta_m",dado," "))
@@ -297,9 +313,9 @@ for j in range(len(lista_m0)):
     print(" ")
     print("VALORES INICIAIS")
     dado = format(m_0, ".3f")
-    print("%s\t\t%s\t\t%s" % ("| m_0",dado,"mg s/N"))
+    print("%s\t\t%s\t\t%s" % ("| m_0",dado," "))
     print("|-------------------------------------------|")
-    print("%s\t\t%s\t\t%s" % ("| pi_c",pi_c,"mg s/N"))
+    print("%s\t\t%s\t\t%s" % ("| pi_c",pi_c," "))
     print("|-------------------------------------------|")
     print(" ")
     print(" ")
@@ -317,6 +333,9 @@ for j in range(len(lista_m0)):
         print("|-------------------------------------------|")
     dado = format(motor.F(), ".3f")
     print("%s\t\t%s\t%s" % ("| f",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(motor.F_AB(), ".3f")
+    print("%s\t%s\t%s" % ("| f_{AB}",dado," "))
     print("|-------------------------------------------|")
     dado = format(motor.N_de_t(), ".3f")
     print("%s\t\t%s\t%s" % ("| eta_t",dado," "))
@@ -343,36 +362,5 @@ for j in range(len(lista_m0)):
 
 
 
-# # Teste de saida
-# m_0 = 2
-# pi_c = 10
-# print(f"m_0________________ {m_0} ")
-# print(f"pi_c________________ {pi_c} ")
-# print(f" -------------------- ")
-# print(f"R_c________________ {motor.R_c()} ")
-# print(f"R_t________________ {motor.R_t()} ")
-# print(f"a_0________________ {motor.A_0()} ")
-# print(f"v_0________________ {motor.V_0()} ")
-# print(f"tau_r________________ {motor.Tau_de_r()} ")
-# print(f"pi_r________________ {motor.Pi_de_r()} ")
-# print(f"n_r________________ {1 - (0.075*((m_0-1)**1.35))} ")
-# print(f"pi_d________________ {motor.Pi_de_d()} ")
-# print(f"tau_lambda________________ {motor.Tau_de_lambida()} ")
-# print(f"tau_c________________ {motor.Tau_de_c()} ")
-# print(f"n_c________________ {motor.N_de_c()} ")
-# print(f"f________________ {motor.F()} ")
-# print(f"tau_t________________ {motor.Tau_de_t()} ")
-# print(f"pi_t________________ {motor.Pi_de_t()} ")
-# print(f"n_t________________ {motor.N_de_t()} ")
-# print(f"pt9/p9________________ {motor.P_t9IP_9()} ")
-# print(f"m9________________ {motor.M_9()} ")
-# print(f"t9/t0________________ {motor.T_9IT_0()} ")
-# print(f"v9/a0________________ {motor.V_9Ia_0()} ")
-# print(f"F/m________________ {motor.Empuxo()} ")
-# print(f"S________________ {motor.S()*1000000} ")
-# print(f"n_temp________________ {motor.N_t()} ")
-# print(f"n_p________________ {motor.N_p()} ")
-# print(f"n_o________________ {motor.N_o()} ")
-# print(f"  ")
-# print(f"  ")
+
     
