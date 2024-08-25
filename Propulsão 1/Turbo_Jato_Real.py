@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 class Turbojato_real:
     def __init__(self):
@@ -129,20 +130,75 @@ n_m = 0.98
 p_0Ip_9 = 1
 
 convert = False
-#conversões:
-# if convert:
-#     t_0 = t_0/1.8                        #[K]
-#     # # c_p  = (c_p  * 4.1868)           #[kJ/kg K]
-#     # c_p  = c_p * 1000                  #[J/kg K]
-#     h_pr = h_pr * 2.326                  #[kJ/kg]
-#     h_pr = h_pr * 1000                   #[J/kg]
+if convert:
+    # Constantes de entrada FORA do SI:
+    t_0 = 216.7         #[R]
+    t_t4 = 1666.7       #[R]   
+    c_pc = 1004.832     #[Btu/lbm R]
+    c_pt = 1096.9416    #[Btu/lbm R]
+    h_pr = 42798400     #[Btu/lbm]
+    
+    #conversão
+    t_0 = t_0/1.8             #[K]
+    t_t4 = t_t4/1.8           #[K]
+    c_pc = (c_pc  * 4.1868)   #[kJ/kg K]
+    c_pc  = c_pc * 1000        #[J/kg K]
+    c_pt = (c_pt  * 4.1868)   #[kJ/kg K]
+    c_pt = c_pt * 1000        #[J/kg K]
+    h_pr = h_pr * 2.326       #[kJ/kg]
+    h_pr = h_pr * 1000        #[J/kg]
 
 
-
-
-
-# Tabela de entrada:
-
+# Tabela com os dados de entrada
+print(" ")
+print(" ENTRADA\t\tVALOR\t\tUNIDADE")
+print("|-------------------------------------------|")
+dado = format(t_0, ".3f")
+print("%s\t\t%s\t\t%s" % ("| T_0",dado,"K"))
+print("|-------------------------------------------|")
+dado = format(t_t4, ".3f")
+print("%s\t%s\t%s" % ("| T_{t4}",dado,"K"))
+print("|-------------------------------------------|")
+dado = format(c_pc, ".3f")
+print("%s\t%s\t%s" % ("| c_{pc}",dado,"[J/kg K]"))
+print("|-------------------------------------------|")
+dado = format(c_pt, ".3f")
+print("%s\t%s\t%s" % ("| c_{pt}",dado,"[J/kg K]"))
+print("|-------------------------------------------|")
+dado = format(h_pr, ".3f")
+print("%s\t%s\t%s" % ("| h_{pr}",dado,"[J/kg]"))
+print("|-------------------------------------------|")
+dado = format(gamma_c, ".3f")
+print("%s\t%s\t\t%s" % ("| gamma_c",dado," "))
+print("|-------------------------------------------|")
+dado = format(gamma_t, ".3f")
+print("%s\t%s\t\t%s" % ("| gamma_t",dado," "))
+print("|-------------------------------------------|")
+dado = format(pi_dmax, ".3f")
+print("%s\t%s\t\t%s" % ("| pi_{dmax}",dado," "))
+print("|-------------------------------------------|")
+dado = format(pi_b, ".3f")
+print("%s\t\t%s\t\t%s" % ("| pi_b",dado," "))
+print("|-------------------------------------------|")
+dado = format(pi_n, ".3f")
+print("%s\t\t%s\t\t%s" % ("| pi_n",dado," "))
+print("|-------------------------------------------|")
+dado = format(e_c, ".3f")
+print("%s\t\t%s\t\t%s" % ("| e_c",dado," "))
+print("|-------------------------------------------|")
+dado = format(e_t, ".3f")
+print("%s\t\t%s\t\t%s" % ("| e_t",dado," "))
+print("|-------------------------------------------|")
+dado = format(n_b, ".3f")
+print("%s\t\t%s\t\t%s" % ("| eta_b",dado," "))
+print("|-------------------------------------------|")
+dado = format(n_m, ".3f")
+print("%s\t\t%s\t\t%s" % ("| eta_m",dado," "))
+print("|-------------------------------------------|")
+dado = format(p_0Ip_9, ".3f")
+print("%s\t%s\t\t%s" % ("| p_0/p_9",dado," "))
+print("|-------------------------------------------|")
+print(" ")
 
 
 # Graficos:
@@ -198,8 +254,54 @@ plt.grid()
 # Plot Grafico ----------------------------------------------------------
 plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
 plt.show()
+
+
     
 # Tabela de saida:
+for j in range(len(lista_m0)):
+    m_0 = lista_m0[j]
+    pi_c = 20
+    print(" ")
+    print("VALORES INICIAIS")
+    dado = format(m_0, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| m_0",dado,"mg s/N"))
+    print("|-------------------------------------------|")
+    print("%s\t\t%s\t\t%s" % ("| pi_c",pi_c,"mg s/N"))
+    print("|-------------------------------------------|")
+    print(" ")
+    print(" ")
+    print(" SAIDA\t\tVALOR\t\tUNIDADE")
+    print("|-------------------------------------------|")
+    dado = format(motor.S()*1000000, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| S",dado,"mg s/N"))
+    print("|-------------------------------------------|")
+    dado = format(motor.Empuxo(), ".3f")
+    if motor.Empuxo() <1000:
+        print("%s\t\t%s\t\t%s" % ("| F/m_0",dado,"N s/kg"))
+        print("|-------------------------------------------|")
+    else:
+        print("%s\t\t%s\t%s" % ("| F/m_0",dado,"N s/kg"))
+        print("|-------------------------------------------|")
+    dado = format(motor.F(), ".3f")
+    print("%s\t\t%s\t%s" % ("| f",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(motor.N_de_t(), ".3f")
+    print("%s\t\t%s\t%s" % ("| eta_t",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(motor.N_de_c(), ".3f")
+    print("%s\t\t%s\t%s" % ("| eta_c",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(motor.N_p(), ".3f")
+    print("%s\t\t%s\t\t%s" % ("| eta_P",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(motor.N_t(), ".3f")
+    print("%s\t\t%s\t\t%s" % ("| eta_T",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(motor.N_o(), ".3f")
+    print("%s\t\t%s\t\t%s" % ("| eta_O",dado," "))
+    print("|-------------------------------------------|")
+    print(" ")
+    print(" ")
 
 
 
@@ -208,36 +310,36 @@ plt.show()
 
 
 
-
-
-# Teste de saida
-m_0 = 2
-pi_c = 10
-print(f"m_0________________ {m_0} ")
-print(f"pi_c________________ {pi_c} ")
-print(f" -------------------- ")
-print(f"R_c________________ {motor.R_c()} ")
-print(f"R_t________________ {motor.R_t()} ")
-print(f"a_0________________ {motor.A_0()} ")
-print(f"v_0________________ {motor.V_0()} ")
-print(f"tau_r________________ {motor.Tau_de_r()} ")
-print(f"pi_r________________ {motor.Pi_de_r()} ")
-print(f"n_r________________ {1 - (0.075*((m_0-1)**1.35))} ")
-print(f"pi_d________________ {motor.Pi_de_d()} ")
-print(f"tau_lambda________________ {motor.Tau_de_lambida()} ")
-print(f"tau_c________________ {motor.Tau_de_c()} ")
-print(f"n_c________________ {motor.N_de_c()} ")
-print(f"f________________ {motor.F()} ")
-print(f"tau_t________________ {motor.Tau_de_t()} ")
-print(f"pi_t________________ {motor.Pi_de_t()} ")
-print(f"n_t________________ {motor.N_de_t()} ")
-print(f"pt9/p9________________ {motor.P_t9IP_9()} ")
-print(f"m9________________ {motor.M_9()} ")
-print(f"t9/t0________________ {motor.T_9IT_0()} ")
-print(f"v9/a0________________ {motor.V_9Ia_0()} ")
-print(f" -------------------- ")
-print(f"F/m________________ {motor.Empuxo()} ")
-print(f"S________________ {motor.S()*1000000} ")
-print(f"  ")
-print(f"  ")
+# # Teste de saida
+# m_0 = 2
+# pi_c = 10
+# print(f"m_0________________ {m_0} ")
+# print(f"pi_c________________ {pi_c} ")
+# print(f" -------------------- ")
+# print(f"R_c________________ {motor.R_c()} ")
+# print(f"R_t________________ {motor.R_t()} ")
+# print(f"a_0________________ {motor.A_0()} ")
+# print(f"v_0________________ {motor.V_0()} ")
+# print(f"tau_r________________ {motor.Tau_de_r()} ")
+# print(f"pi_r________________ {motor.Pi_de_r()} ")
+# print(f"n_r________________ {1 - (0.075*((m_0-1)**1.35))} ")
+# print(f"pi_d________________ {motor.Pi_de_d()} ")
+# print(f"tau_lambda________________ {motor.Tau_de_lambida()} ")
+# print(f"tau_c________________ {motor.Tau_de_c()} ")
+# print(f"n_c________________ {motor.N_de_c()} ")
+# print(f"f________________ {motor.F()} ")
+# print(f"tau_t________________ {motor.Tau_de_t()} ")
+# print(f"pi_t________________ {motor.Pi_de_t()} ")
+# print(f"n_t________________ {motor.N_de_t()} ")
+# print(f"pt9/p9________________ {motor.P_t9IP_9()} ")
+# print(f"m9________________ {motor.M_9()} ")
+# print(f"t9/t0________________ {motor.T_9IT_0()} ")
+# print(f"v9/a0________________ {motor.V_9Ia_0()} ")
+# print(f"F/m________________ {motor.Empuxo()} ")
+# print(f"S________________ {motor.S()*1000000} ")
+# print(f"n_temp________________ {motor.N_t()} ")
+# print(f"n_p________________ {motor.N_p()} ")
+# print(f"n_o________________ {motor.N_o()} ")
+# print(f"  ")
+# print(f"  ")
     
