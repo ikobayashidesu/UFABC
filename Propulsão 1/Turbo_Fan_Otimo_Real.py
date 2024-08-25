@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-class Turbofan_real:
+class Turbofan_otimo_real:
     def __init__(self):
         s = 1
 
@@ -62,26 +62,6 @@ class Turbofan_real:
         f = (self.Tau_de_lambida() - (self.Tau_de_r()*self.Tau_de_c()))/(((n_b*h_pr)/(c_pc*t_0))-self.Tau_de_lambida())
         return f
     
-    def Tau_de_t(self):
-        tau_t = 1 - (((1)/(n_m*(1+self.F())))*((self.Tau_de_r())/(self.Tau_de_lambida()))*(self.Tau_de_c() - 1 + (alpha*(self.Tau_de_f()-1))))
-        return tau_t
-    
-    def Pi_de_t(self):
-        pi_t = self.Tau_de_t()**((gamma_t)/((gamma_t-1)*e_t))
-        return pi_t
-    
-    def N_de_t(self):
-        n_t = (1-self.Tau_de_t())/(1-(self.Tau_de_t()**(1/e_t)))
-        return n_t
-    
-    def P_t9IP_9(self):
-        p_t9Ip_9 = p_0Ip_9*self.Pi_de_r()*self.Pi_de_d()*pi_c*pi_b*self.Pi_de_t()*pi_n
-        return p_t9Ip_9 
-    
-    def M_9(self):
-        m_9 = (((2)/(gamma_t-1))*(((self.P_t9IP_9())**((gamma_t-1)/(gamma_t)))-1))**(0.5)
-        return m_9
-    
     def T_9IT_0(self):
         t_9It_0 = ((self.Tau_de_t()*self.Tau_de_lambida())/(self.P_t9IP_9()**((gamma_t-1)/(gamma_t))))*((c_pc)/(c_pt))
         return t_9It_0
@@ -106,14 +86,59 @@ class Turbofan_real:
         v_19Ia_0 = self.M_19()*((self.T_19IT_0())**(0.5))
         return v_19Ia_0
     
+    def V_19(self):
+        v_19 = self.A_0()*self.M_19()*((self.T_19IT_0())**(0.5))
+        return v_19
+    
+    def II(self):
+        ii = (self.Pi_de_r()*self.Pi_de_d()*pi_c*pi_b*pi_n)**((gamma_t-1)/(gamma_t))
+        return ii
+    
+    def Tau_de_t(self):
+        trava = True
+        tau_t = ((1)/(self.II()))+(((1)/(self.Tau_de_lambida()*(self.Tau_de_r()-1)))*((((1)/(2*n_m))*((self.Tau_de_r()*(self.Tau_de_f()-1))/(((self.V_19())/(self.V_0()))-1)))**(2)))
+        tau_t_antigo = tau_t
+        
+        while trava:
+            tau_t = (((tau_t_antigo)**((e_t-1)/(e_t)))/(self.II()))+(((1)/(self.Tau_de_lambida()*(self.Tau_de_r()-1)))*((((1)/(2*n_m))*((self.Tau_de_r()*(self.Tau_de_f()-1))/(((self.V_19())/(self.V_0()))-1))*(1+(((1-e_t)/(e_t))*(((tau_t_antigo)**((-1)/(e_t)))/(self.II())))))**(2)))
+            
+            teste = ((tau_t - tau_t_antigo)**(2))**(0.5)
+            if np.all(teste <= 0.0001):
+                resultado = tau_t 
+                trava = False
+            
+            tau_t_antigo = tau_t 
+        
+        return resultado
+    
+    def Pi_de_t(self):
+        pi_t = self.Tau_de_t()**((gamma_t)/((gamma_t-1)*e_t))
+        return pi_t
+    
+    def N_de_t(self):
+        n_t = (1-self.Tau_de_t())/(1-(self.Tau_de_t()**(1/e_t)))
+        return n_t
+    
+    def Alpha(self):
+        alpha = ((n_m*(1+self.F())*self.Tau_de_lambida()*(1-self.Tau_de_t()))-(self.Tau_de_r()*(self.Tau_de_c()-1)))/(self.Tau_de_r()*(self.Tau_de_f()-1))
+        return alpha
+    
+    def P_t9IP_9(self):
+        p_t9Ip_9 = p_0Ip_9*self.Pi_de_r()*self.Pi_de_d()*pi_c*pi_b*self.Pi_de_t()*pi_n
+        return p_t9Ip_9 
+    
+    def M_9(self):
+        m_9 = (((2)/(gamma_t-1))*(((self.P_t9IP_9())**((gamma_t-1)/(gamma_t)))-1))**(0.5)
+        return m_9
+    
     def Empuxo(self):
-        parte_1 = ((alpha)/(1+alpha))*(self.A_0())*((self.V_19Ia_0())-(m_0)+(((self.T_19IT_0())/(self.V_19Ia_0()))*((1-p_0Ip_19)/(gamma_c))))
-        parte_2 = ((((1)/(1+alpha))*(self.A_0()))*(((1+self.F())*(self.V_9Ia_0()))-(m_0)+((1+self.F())*((self.R_t())/(self.R_c()))*((self.T_9IT_0())/(self.V_9Ia_0()))*((1-p_0Ip_9)/(gamma_c)))))
+        parte_1 = ((self.Alpha())/(1+self.Alpha()))*(self.A_0())*((self.V_19Ia_0())-(m_0)+(((self.T_19IT_0())/(self.V_19Ia_0()))*((1-p_0Ip_19)/(gamma_c))))
+        parte_2 = ((((1)/(1+self.Alpha()))*(self.A_0()))*(((1+self.F())*(self.V_9Ia_0()))-(m_0)+((1+self.F())*((self.R_t())/(self.R_c()))*((self.T_9IT_0())/(self.V_9Ia_0()))*((1-p_0Ip_9)/(gamma_c)))))
         empuxo = parte_1+parte_2
         return empuxo
     
     def S(self):
-       s = self.F()/((1+alpha)*self.Empuxo())
+       s = self.F()/((1+self.Alpha())*self.Empuxo())
        return s
     
     def FR(self):
@@ -123,11 +148,11 @@ class Turbofan_real:
        return fr
     
     def N_t(self):
-       n_ter = (((self.A_0())**(2))*(((1+self.F())*((self.V_9Ia_0())**2))+(alpha*((self.V_19Ia_0())**2))-((1+alpha)*(m_0**2))))/(2*self.F()*h_pr)
+       n_ter = (((self.A_0())**(2))*(((1+self.F())*((self.V_9Ia_0())**2))+(self.Alpha()*((self.V_19Ia_0())**2))-((1+self.Alpha())*(m_0**2))))/(2*self.F()*h_pr)
        return n_ter
     
     def N_p(self):
-       n_p = (2*m_0*((((1+self.F())*((self.V_9Ia_0())))+(alpha*((self.V_19Ia_0())))-((1+alpha)*(m_0)))))/((((1+self.F())*((self.V_9Ia_0())**2))+(alpha*((self.V_19Ia_0())**2))-((1+alpha)*(m_0**2))))
+       n_p = (2*m_0*((((1+self.F())*((self.V_9Ia_0())))+(self.Alpha()*((self.V_19Ia_0())))-((1+self.Alpha())*(m_0)))))/((((1+self.F())*((self.V_9Ia_0())**2))+(self.Alpha()*((self.V_19Ia_0())**2))-((1+self.Alpha())*(m_0**2))))
        return n_p
     
     def N_o(self):
@@ -137,10 +162,10 @@ class Turbofan_real:
     
 #####################################################################################
 
-motor = Turbofan_real()
+motor = Turbofan_otimo_real()
 
 # Variaveis de entrada:
-lista_alpha = [0.5,1,2,5]
+lista_pi_f = [2,2.5,3]
 lista_pi_c = [2,40]
 
 # Constantes de entrada em SI:
@@ -152,7 +177,6 @@ h_pr = 42800000     #[J/kg]
 gamma_c = 1.4 
 gamma_t = 1.35 
 pi_dmax = 0.98
-pi_f = 2
 pi_fn = 0.98
 pi_b = 0.98
 pi_n = 0.98
@@ -214,9 +238,6 @@ print("|-------------------------------------------|")
 dado = format(pi_dmax, ".3f")
 print("%s\t%s\t\t%s" % ("| pi_{dmax}",dado," "))
 print("|-------------------------------------------|")
-dado = format(pi_f, ".3f")
-print("%s\t\t%s\t\t%s" % ("| pi_f",dado," "))
-print("|-------------------------------------------|")
 dado = format(pi_fn, ".3f")
 print("%s\t%s\t\t%s" % ("| pi_{fn}",dado," "))
 print("|-------------------------------------------|")
@@ -260,13 +281,13 @@ pi_c = np.linspace(min(lista_pi_c) ,max(lista_pi_c))  #Limites do eixo X
 # Grafico 1 ----------------------------------------------------------
 plt.subplot(2, 2, 1)
 
-for i in range(len(lista_alpha)):
-    alpha = lista_alpha[i]
-    plt.plot(pi_c, motor.Empuxo(), label=r'$\alpha = ${}'.format(alpha))
+for i in range(len(lista_pi_f)):
+    pi_f = lista_pi_f[i]
+    plt.plot(pi_c, motor.Empuxo(), label=r'$\pi_f = ${}'.format(pi_f))
 
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(0, 800)
+plt.ylim(0, 300)
 plt.xlabel(r'$\pi_c$' , fontsize=15)
 plt.ylabel(r'$F/ \dot m$   $[N / (kg /s)]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -274,12 +295,12 @@ plt.grid()
 
 # Grafico 2 ----------------------------------------------------------
 plt.subplot(2, 2, 2)
-for i in range(len(lista_alpha)):
-    alpha = lista_alpha[i]
-    plt.plot(pi_c, motor.S()*1000000, label=r'$\alpha = ${}'.format(alpha))
+for i in range(len(lista_pi_f)):
+    pi_f = lista_pi_f[i]
+    plt.plot(pi_c, motor.S()*1000000, label=r'$\pi_f = ${}'.format(pi_f))
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(15, 50)
+plt.ylim(12, 28)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel(r'$S$   $[(mg/s) / N]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -287,9 +308,9 @@ plt.grid()
 
 # Grafico 3 ----------------------------------------------------------
 plt.subplot(2, 2, 3)
-for i in range(len(lista_alpha)):
-    alpha = lista_alpha[i]
-    plt.plot(pi_c, motor.F(), label=r'$\alpha = ${}'.format(alpha))
+for i in range(len(lista_pi_f)):
+    pi_f = lista_pi_f[i]
+    plt.plot(pi_c, motor.F(), label=r'$\pi_f = ${}'.format(pi_f))
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
@@ -299,6 +320,18 @@ plt.grid()
 
 # Grafico 4 ----------------------------------------------------------
 
+plt.subplot(2, 2, 4)
+for i in range(len(lista_pi_f)):
+    pi_f = lista_pi_f[i]
+    plt.plot(pi_c, motor.Alpha(), label=r'$\pi_f = ${}'.format(pi_f))
+            
+plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
+plt.ylim(0, 25)
+plt.xlabel(r'$\pi_c$ ' , fontsize=15)
+plt.ylabel(r'$\alpha *$' , fontsize=15)
+plt.minorticks_on() # aparece a divisão
+plt.grid()
+
 
 # Plot Grafico ----------------------------------------------------------
 plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.7, hspace=0.35)
@@ -307,13 +340,13 @@ plt.show()
 
     
 # Tabela de saida:
-for j in range(len(lista_alpha)):
-    alpha = lista_alpha[j]
+for j in range(len(lista_pi_f)):
+    pi_f = lista_pi_f[j]
     pi_c = pi_c_
     print(" ")
     print("VALORES INICIAIS")
-    dado = format(alpha, ".3f")
-    print("%s\t\t%s\t\t%s" % ("| alpha",dado," "))
+    dado = format(pi_f , ".3f")
+    print("%s\t\t%s\t\t%s" % ("| pi_f ",dado," "))
     print("|-------------------------------------------|")
     print("%s\t\t%s\t\t%s" % ("| pi_c",pi_c," "))
     print("|-------------------------------------------|")
@@ -337,6 +370,9 @@ for j in range(len(lista_alpha)):
     dado = format(motor.FR(), ".3f")
     print("%s\t\t%s\t%s" % ("| FR",dado," "))
     print("|-------------------------------------------|")
+    dado = format(motor.Alpha(), ".3f")
+    print("%s\t\t%s\t%s" % ("| alpha",dado," "))
+    print("|-------------------------------------------|")
     dado = format(motor.N_de_t(), ".3f")
     print("%s\t\t%s\t%s" % ("| eta_t",dado," "))
     print("|-------------------------------------------|")
@@ -358,3 +394,49 @@ for j in range(len(lista_alpha)):
 
 
 
+
+
+
+
+# # Teste de saida
+# m_0 = 0.9
+# pi_c = 24
+# alpha = 2
+# print(f"m_0________________ {m_0} ")
+# print(f"pi_c________________ {pi_c} ")
+# print(f"alpha________________ {alpha} ")
+# print(f" -------------------- ")
+# print(f"R_c________________ {motor.R_c()} ")
+# print(f"R_t________________ {motor.R_t()} ")
+# print(f"a_0________________ {motor.A_0()} ")
+# print(f"v_0________________ {motor.V_0()} ")
+# print(f"tau_r________________ {motor.Tau_de_r()} ")
+# print(f"pi_r________________ {motor.Pi_de_r()} ")
+# print(f"n_r________________ {1 - (0.075*((m_0-1)**1.35))} ")
+# print(f"pi_d________________ {motor.Pi_de_d()} ")
+# print(f"tau_lambda________________ {motor.Tau_de_lambida()} ")
+# print(f"tau_c________________ {motor.Tau_de_c()} ")
+# print(f"n_c________________ {motor.N_de_c()} ")
+# print(f"tau_f________________ {motor.Tau_de_f()} ")
+# print(f"n_f________________ {motor.N_de_f()} ")
+# print(f"f________________ {motor.F()} ")
+# print(f"tau_t________________ {motor.Tau_de_t()} ")
+# print(f"pi_t________________ {motor.Pi_de_t()} ")
+# print(f"n_t________________ {motor.N_de_t()} ")
+# print(f"pt9/p9________________ {motor.P_t9IP_9()} ")
+# print(f"m9________________ {motor.M_9()} ")
+# print(f"t9/t0________________ {motor.T_9IT_0()} ")
+# print(f"v9/a0________________ {motor.V_9Ia_0()} ")
+# print(f"pt19/p19________________ {motor.P_t19IP_19()} ")
+# print(f"m19________________ {motor.M_19()} ")
+# print(f"t19/t0________________ {motor.T_19IT_0()} ")
+# print(f"v19/a0________________ {motor.V_19Ia_0()} ")
+# print(f"F/m________________ {motor.Empuxo()} ")
+# print(f"S________________ {motor.S()*1000000} ")
+# print(f"FR________________ {motor.FR()*1000000} ")
+# print(f"n_temp________________ {motor.N_t()} ")
+# print(f"n_p________________ {motor.N_p()} ")
+# print(f"n_o________________ {motor.N_o()} ")
+# print(f"  ")
+# print(f"  ")
+    
