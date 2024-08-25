@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-class Turbojato_real:
+class Turbojato_real_AB:
     def __init__(self):
         s = 1
 
@@ -66,36 +66,49 @@ class Turbojato_real:
         n_t = (1-self.Tau_de_t())/(1-(self.Tau_de_t()**(1/e_t)))
         return n_t
     
+    def R_AB(self):
+        r_ab = ((gamma_ab-1)/(gamma_ab))*(c_pab)
+        return r_ab
+    
+    def Tau_de_lambda_AB(self):
+        tau_lambida_ab = (c_pab*t_t7)/(c_pc*t_0)
+        return tau_lambida_ab
+    
+    def F_AB(self):
+        f_ab = ((1+self.F())*(self.Tau_de_lambda_AB()-(self.Tau_de_lambida()*self.Tau_de_t())))/(((n_ab*h_pr)/(c_pc*t_0))-(self.Tau_de_lambda_AB()))
+        return f_ab
+    
     def P_t9IP_9(self):
-        p_t9Ip_9 = p_0Ip_9*self.Pi_de_r()*self.Pi_de_d()*pi_c*pi_b*self.Pi_de_t()*pi_n
-        return p_t9Ip_9 
+        p_t9Ip_9 = p_0Ip_9*self.Pi_de_r()*self.Pi_de_d()*pi_c*pi_b*self.Pi_de_t()*pi_n*pi_ab
+        return p_t9Ip_9
+
+    def T_9IT_0(self):
+        t_9It_0 = ((t_t7)/(t_0))/((self.P_t9IP_9())**((gamma_ab-1)/(gamma_ab)))
+        return t_9It_0 
     
     def M_9(self):
-        m_9 = (((2)/(gamma_t-1))*(((self.P_t9IP_9())**((gamma_t-1)/(gamma_t)))-1))**(0.5)
+        m_9 = (((2)/(gamma_ab-1))*(((self.P_t9IP_9())**((gamma_ab-1)/(gamma_ab)))-1))**(0.5)
         return m_9
     
-    def T_9IT_0(self):
-        t_9It_0 = ((self.Tau_de_t()*self.Tau_de_lambida())/(self.P_t9IP_9()**((gamma_t-1)/(gamma_t))))*((c_pc)/(c_pt))
-        return t_9It_0
     
     def V_9Ia_0(self):
-        v_9Ia_0 = self.M_9()*((((gamma_t*self.R_t())/(gamma_c*self.R_c()))*(self.T_9IT_0()))**(0.5))
+        v_9Ia_0 = self.M_9()*((((gamma_ab*self.R_AB())/(gamma_c*self.R_c()))*(self.T_9IT_0()))**(0.5))
         return v_9Ia_0
     
     def Empuxo(self):
-        empuxo = self.A_0()*(((1+self.F())*(self.V_9Ia_0()))-(m_0)+((1+self.F())*((self.R_t())/(self.R_c()))*((self.T_9IT_0())/(self.V_9Ia_0()))*((1-p_0Ip_9)/(gamma_c))))
+        empuxo = self.A_0()*(((1+self.F()+self.F_AB())*(self.V_9Ia_0()))-(m_0)+((1+self.F()+self.F_AB())*((self.R_AB())/(self.R_c()))*((self.T_9IT_0())/(self.V_9Ia_0()))*((1-p_0Ip_9)/(gamma_c))))
         return empuxo
     
     def S(self):
-       s = self.F()/self.Empuxo()
+       s = (self.F()+self.F_AB())/self.Empuxo()
        return s
     
     def N_t(self):
-       n_ter = (((self.A_0())**(2))*(((1+self.F())*((self.V_9Ia_0())**2))-(m_0**2)))/(2*self.F()*h_pr)
+       n_ter = (((self.A_0())**(2))*(((1+self.F()+self.F_AB())*((self.V_9Ia_0())**2))-(m_0**2)))/(2*(self.F()+self.F_AB())*h_pr)
        return n_ter
     
     def N_p(self):
-       n_p = (2*self.V_0()*self.Empuxo())/(((self.A_0())**(2))*(((1+self.F())*((self.V_9Ia_0())**2))-(m_0**2)))
+       n_p = (2*self.V_0()*self.Empuxo())/(((self.A_0())**(2))*(((1+self.F()+self.F_AB())*((self.V_9Ia_0())**2))-(m_0**2)))
        return n_p
     
     def N_o(self):
@@ -105,28 +118,33 @@ class Turbojato_real:
     
 #####################################################################################
 
-motor = Turbojato_real()
+motor = Turbojato_real_AB()
 
 # Variaveis de entrada:
 lista_m0 = [2]
-lista_pi_c = [2,40]
+lista_pi_c = [2,14]
 
 # Constantes de entrada em SI:
 t_0 = 216.7         #[K]
-t_t4 = 1390       #[K]   
-c_pc = 1004     #[J/kg K]
+t_t4 = 1800        #[K]
+t_t7 = 1944.4       #[K]   
+c_pc = 1004    #[J/kg K]
 c_pt = 1239    #[J/kg K]
-h_pr = 42800000     #[J/kg]
+c_pab = 1235.106    #[J/kg K]
+h_pr = 42800000      #[J/kg]
 gamma_c = 1.4 
-gamma_t = 1.3 
-pi_dmax = 0.95
-pi_b = 0.92
-pi_n = 0.96
-e_c = 0.84
-e_t = 0.83
-n_b = 0.91
-n_m = 0.99
-p_0Ip_9 = 0.5
+gamma_t = 1.3
+gamma_ab = 1.3 
+pi_dmax = 0.98
+pi_b = 0.98
+pi_ab = 0.98
+pi_n = 0.98
+e_c = 0.89
+e_t = 0.91
+n_b = 0.99
+n_ab = 0.96
+n_m = 0.98
+p_0Ip_9 = 1
 
 convert = False
 if convert:
@@ -215,7 +233,7 @@ for i in range(len(lista_m0)):
 
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(0, 1200)
+plt.ylim(800, 1100)
 plt.xlabel(r'$\pi_c$' , fontsize=15)
 plt.ylabel(r'$F/ \dot m$   $[N / (kg /s)]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -230,7 +248,7 @@ for i in range(len(lista_m0)):
     plt.plot(pi_c, motor.S()*1000000, label=r'$m_0 = ${}'.format(m_0))
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(20, 60)
+plt.ylim(40, 58)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel(r'$S$   $[(mg/s) / N]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -261,7 +279,6 @@ for i in range(len(lista_m0)):
     plt.plot(pi_c, motor.N_o(), label=r'$\eta_O $')
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(0, 0.9)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel('Eficiencias' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
