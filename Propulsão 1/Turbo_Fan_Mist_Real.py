@@ -47,7 +47,7 @@ class Turbofan_mist_real:
         return tau_lambida
     
     def Tau_de_lambida_AB(self):
-        tau_lambida_ab = (t_t7*c_pab)/(t_0*c_pab)
+        tau_lambida_ab = (t_t7*c_pab)/(t_0*c_pc)
         return tau_lambida_ab
     
     def Tau_de_c(self):
@@ -152,19 +152,19 @@ class Turbofan_mist_real:
         p_t9Ip_9 = p_0Ip_9*self.Pi_de_r()*self.Pi_de_d()*pi_c*pi_b*self.Pi_de_t()*pi_n*self.Pi_de_m()*pi_ab
         return p_t9Ip_9 
     
-    def F_AB(self):
-        if after_burn:
-            f_ab = (1+((self.F())/(1+self.Alpha())))*(((self.Tau_de_lambida_AB())-(((self.C_p6a())/(c_pt))*(self.Tau_de_lambida())*(self.Tau_de_t())*(self.Tau_de_M())))/(((n_ab*h_pr)/(c_pc*t_0))-(self.Tau_de_lambida_AB())))
-        else:
-            f_ab = 0
-        return f_ab
-    
     def C_p9(self):
         if after_burn:
             c_p9 = c_pab
         else:
             c_p9 = self.C_p6a()
         return c_p9
+    
+    def R_9(self):
+        if after_burn:
+            r_9 = self.R_ab()
+        else:
+            r_9 = self.R_6a()
+        return r_9
     
     def Gamma_9(self):
         if after_burn:
@@ -173,12 +173,12 @@ class Turbofan_mist_real:
             gamma_9 = self.Gamma_6a()
         return gamma_9
     
-    def R_9(self):
+    def F_AB(self):
         if after_burn:
-            r_9 = self.R_ab()
+            f_ab = (1+((self.F())/(1+self.Alpha())))*(((self.Tau_de_lambida_AB())-(((self.C_p6a())/(c_pt))*(self.Tau_de_lambida())*(self.Tau_de_t())*(self.Tau_de_M())))/(((n_ab*h_pr)/(c_pc*t_0))-(self.Tau_de_lambida_AB())))
         else:
-            r_9 = self.R_6a()
-        return r_9
+            f_ab = 0
+        return f_ab
     
     def T_9IT_0(self):
         if after_burn:
@@ -205,10 +205,7 @@ class Turbofan_mist_real:
         return empuxo
     
     def S(self):
-       if after_burn:
-            s = ((self.F_o()/(self.Empuxo()))*1000000)+ 10
-       else:
-            s = (self.F_o()/(self.Empuxo()))*1000000
+       s = (self.F_o()/(self.Empuxo()))*1000000
        return s
     
     def N_p(self):
@@ -262,7 +259,7 @@ m_0_ = 0.9
 pi_c_ = 24
 
 
-after_burn = True
+after_burn = False
 
 convert = False
 if convert:
