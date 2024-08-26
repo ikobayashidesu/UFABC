@@ -151,18 +151,23 @@ convert = False
 if convert:
     # Constantes de entrada FORA do SI:
     t_0 = 216.7         #[R]
-    t_t4 = 1666.7       #[R]   
+    t_t4 = 1666.7       #[R]
+    t_t7 = 1666.7       #[R]    
     c_pc = 1004.832     #[Btu/lbm R]
     c_pt = 1096.9416    #[Btu/lbm R]
+    c_pab = 1096.9416    #[Btu/lbm R]
     h_pr = 42798400     #[Btu/lbm]
     
     #conversão
     t_0 = t_0/1.8             #[K]
     t_t4 = t_t4/1.8           #[K]
+    t_t7 = t_t7/1.8           #[K]
     c_pc = (c_pc  * 4.1868)   #[kJ/kg K]
     c_pc  = c_pc * 1000        #[J/kg K]
     c_pt = (c_pt  * 4.1868)   #[kJ/kg K]
     c_pt = c_pt * 1000        #[J/kg K]
+    c_pab = (c_pab  * 4.1868)   #[kJ/kg K]
+    c_pab = c_pab * 1000        #[J/kg K]
     h_pr = h_pr * 2.326       #[kJ/kg]
     h_pr = h_pr * 1000        #[J/kg]
 
