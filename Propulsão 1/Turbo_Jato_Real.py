@@ -113,6 +113,15 @@ def Nivel_motor(nivel):
         e_t = 0.9
         n_b = 0.98
 
+    elif nivel == 1:
+        t_t4 = 1390        #[K]   
+        pi_dmax = 0.98
+        pi_b = 0.92
+        pi_n = 0.98
+        e_c = 0.84
+        e_t = 0.83
+        n_b = 0.91 
+
     elif nivel == 2:
         t_t4 = 1390        #[K]   
         pi_dmax = 0.98
@@ -121,6 +130,15 @@ def Nivel_motor(nivel):
         e_c = 0.84
         e_t = 0.83
         n_b = 0.91  
+
+    elif nivel == 3:
+        t_t4 = 1390        #[K]   
+        pi_dmax = 0.98
+        pi_b = 0.92
+        pi_n = 0.98
+        e_c = 0.84
+        e_t = 0.83
+        n_b = 0.91   
 
 
     
