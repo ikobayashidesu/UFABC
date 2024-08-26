@@ -275,7 +275,7 @@ print(" ")
 
 
 # Graficos:
-plt.figure(figsize = ((12, 6)))
+plt.figure(figsize = ((15, 5)))
 pi_c = np.linspace(min(lista_pi_c) ,max(lista_pi_c))  #Limites do eixo X
 
 # Grafico 1 ----------------------------------------------------------
