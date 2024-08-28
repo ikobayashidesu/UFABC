@@ -133,14 +133,85 @@ class Turbofan_real:
     def N_o(self):
        n_o = self.N_t()*self.N_p()
        return n_o
+
+
+def Nivel_motor(nivel):
+    global t_t4, pi_dmax, pi_b, pi_n, e_c, e_t, n_b, e_f
+    if nivel == 0:        
+        pi_dmax = 0.99
+        e_c = 0.90
+        e_f = 0.89
+        pi_b = 0.96
+        n_b = 0.99
+        e_t = 0.89
+        pi_n = 0.99  
+        t_t4 = 3000
+        if convert:
+            t_t4 = t_t4/1.8 
+
+
+    elif nivel == 1:        
+        pi_dmax = 0.90  #ajustavel
+        e_t = 0.80  #ajustavel
+        pi_n = 0.95  #ajustavel
+
+        t_t4 = 1110 
+        pi_b = 0.90
+        e_c = 0.80
+        e_f = 0.78
+        n_b = 0.85
+        if convert:
+            t_t4 = 2000 
+   
+
+    elif nivel == 2:
+        pi_dmax = 0.95  #ajustavel
+        e_t = 0.83  #ajustavel
+        pi_n = 0.97  #ajustavel
+     
+        e_c = 0.84
+        e_f = 0.82
+        pi_b = 0.92
+        n_b = 0.91
+        t_t4 = 1390  
+        if convert:
+            t_t4 = 2500 
+  
+
+    elif nivel == 3:
+        pi_dmax = 0.98  #ajustavel
+        e_t = 0.87  #ajustavel
+        pi_n = 0.98  #ajustavel
+
+        t_t4 = 1780         
+        pi_b = 0.94
+        e_c = 0.88
+        e_f = 0.86
+        n_b = 0.98
+        if convert:
+            t_t4 = 3200 
+     
     
-    
+    elif nivel == 4:
+        pi_dmax = 0.995  #ajustavel
+        e_t = 0.89  #ajustavel
+        pi_n = 0.995  #ajustavel
+
+        t_t4 = 2000         
+        pi_b = 0.95
+        e_c = 0.90
+        e_f = 0.89
+        n_b = 0.99
+        if convert:
+            t_t4 = 3600
+
 #####################################################################################
 
 motor = Turbofan_real()
+nivel_motor = [0]
 
 # Variaveis de entrada:
-lista_alpha = [0.5,1,2,5]
+lista_alpha = [8]
 lista_pi_c = [2,40]
 
 # Constantes de entrada em SI:
@@ -149,24 +220,19 @@ t_t4 = 1670       #[K]
 c_pc = 1004     #[J/kg K]
 c_pt = 1096    #[J/kg K]
 h_pr = 42800000     #[J/kg]
-gamma_c = 1.4 
-gamma_t = 1.35 
-pi_dmax = 0.98
-pi_f = 2
-pi_fn = 0.98
-pi_b = 0.98
-pi_n = 0.98
-e_f = 0.88
-e_c = 0.90
-e_t = 0.91
-n_b = 0.99
-n_m = 0.98
-p_0Ip_9 = 1
-p_0Ip_19 = 1
-m_0 = 0.9
-pi_c_ = 24
 
-convert = False
+gamma_c = 1.4 
+gamma_t = 1.33 
+pi_f = 1.7
+pi_fn = 0.99
+n_m = 0.99
+p_0Ip_9 = 0.9
+p_0Ip_19 = 0.9
+m_0 = 0.8
+pi_c_ = 36
+alpha = lista_alpha[0]
+
+convert = True
 if convert:
     # Constantes de entrada FORA do SI:
     t_0 = 390         #[R]
@@ -187,70 +253,74 @@ if convert:
 
 
 # Tabela com os dados de entrada
-print(" ")
-print(" ENTRADA\t\tVALOR\t\tUNIDADE")
-print("|-------------------------------------------|")
-dado = format(t_0, ".3f")
-print("%s\t\t%s\t\t%s" % ("| T_0",dado,"K"))
-print("|-------------------------------------------|")
-dado = format(t_t4, ".3f")
-print("%s\t%s\t%s" % ("| T_{t4}",dado,"K"))
-print("|-------------------------------------------|")
-dado = format(c_pc, ".3f")
-print("%s\t%s\t%s" % ("| c_{pc}",dado,"[J/kg K]"))
-print("|-------------------------------------------|")
-dado = format(c_pt, ".3f")
-print("%s\t%s\t%s" % ("| c_{pt}",dado,"[J/kg K]"))
-print("|-------------------------------------------|")
-dado = format(h_pr, ".3f")
-print("%s\t%s\t%s" % ("| h_{pr}",dado,"[J/kg]"))
-print("|-------------------------------------------|")
-dado = format(gamma_c, ".3f")
-print("%s\t%s\t\t%s" % ("| gamma_c",dado," "))
-print("|-------------------------------------------|")
-dado = format(gamma_t, ".3f")
-print("%s\t%s\t\t%s" % ("| gamma_t",dado," "))
-print("|-------------------------------------------|")
-dado = format(pi_dmax, ".3f")
-print("%s\t%s\t\t%s" % ("| pi_{dmax}",dado," "))
-print("|-------------------------------------------|")
-dado = format(pi_f, ".3f")
-print("%s\t\t%s\t\t%s" % ("| pi_f",dado," "))
-print("|-------------------------------------------|")
-dado = format(pi_fn, ".3f")
-print("%s\t%s\t\t%s" % ("| pi_{fn}",dado," "))
-print("|-------------------------------------------|")
-dado = format(pi_b, ".3f")
-print("%s\t\t%s\t\t%s" % ("| pi_b",dado," "))
-print("|-------------------------------------------|")
-dado = format(pi_n, ".3f")
-print("%s\t\t%s\t\t%s" % ("| pi_n",dado," "))
-print("|-------------------------------------------|")
-dado = format(e_f, ".3f")
-print("%s\t\t%s\t\t%s" % ("| e_f",dado," "))
-print("|-------------------------------------------|")
-dado = format(e_c, ".3f")
-print("%s\t\t%s\t\t%s" % ("| e_c",dado," "))
-print("|-------------------------------------------|")
-dado = format(e_t, ".3f")
-print("%s\t\t%s\t\t%s" % ("| e_t",dado," "))
-print("|-------------------------------------------|")
-dado = format(n_b, ".3f")
-print("%s\t\t%s\t\t%s" % ("| eta_b",dado," "))
-print("|-------------------------------------------|")
-dado = format(n_m, ".3f")
-print("%s\t\t%s\t\t%s" % ("| eta_m",dado," "))
-print("|-------------------------------------------|")
-dado = format(p_0Ip_9, ".3f")
-print("%s\t%s\t\t%s" % ("| p_0/p_9",dado," "))
-print("|-------------------------------------------|")
-dado = format(p_0Ip_19, ".3f")
-print("%s\t%s\t\t%s" % ("| p_0/p_19",dado," "))
-print("|-------------------------------------------|")
-dado = format(m_0, ".3f")
-print("%s\t\t%s\t\t%s" % ("| m_0",dado," "))
-print("|-------------------------------------------|")
-print(" ")
+for i in range(len(nivel_motor)):
+    print(" ")
+    Nivel_motor(nivel_motor[i])
+    print(" \t\tTEC LEVEL = {}".format(nivel_motor[i]))
+    print("|-------------------------------------------|")
+    print(" ENTRADA\tVALOR\t\tUNIDADE")
+    print("|-------------------------------------------|")
+    dado = format(t_0, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| T_0",dado,"K"))
+    print("|-------------------------------------------|")
+    dado = format(t_t4, ".3f")
+    print("%s\t%s\t%s" % ("| T_{t4}",dado,"K"))
+    print("|-------------------------------------------|")
+    dado = format(c_pc, ".3f")
+    print("%s\t%s\t%s" % ("| c_{pc}",dado,"[J/kg K]"))
+    print("|-------------------------------------------|")
+    dado = format(c_pt, ".3f")
+    print("%s\t%s\t%s" % ("| c_{pt}",dado,"[J/kg K]"))
+    print("|-------------------------------------------|")
+    dado = format(h_pr, ".3f")
+    print("%s\t%s\t%s" % ("| h_{pr}",dado,"[J/kg]"))
+    print("|-------------------------------------------|")
+    dado = format(gamma_c, ".3f")
+    print("%s\t%s\t\t%s" % ("| gamma_c",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(gamma_t, ".3f")
+    print("%s\t%s\t\t%s" % ("| gamma_t",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(pi_dmax, ".3f")
+    print("%s\t%s\t\t%s" % ("| pi_{dmax}",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(pi_f, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| pi_f",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(pi_fn, ".3f")
+    print("%s\t%s\t\t%s" % ("| pi_{fn}",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(pi_b, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| pi_b",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(pi_n, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| pi_n",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(e_f, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| e_f",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(e_c, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| e_c",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(e_t, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| e_t",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(n_b, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| eta_b",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(n_m, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| eta_m",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(p_0Ip_9, ".3f")
+    print("%s\t%s\t\t%s" % ("| p_0/p_9",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(p_0Ip_19, ".3f")
+    print("%s\t%s\t\t%s" % ("| p_0/p_19",dado," "))
+    print("|-------------------------------------------|")
+    dado = format(m_0, ".3f")
+    print("%s\t\t%s\t\t%s" % ("| m_0",dado," "))
+    print("|-------------------------------------------|")
+    print(" ")
 
 
 # Graficos:
@@ -260,9 +330,9 @@ pi_c = np.linspace(min(lista_pi_c) ,max(lista_pi_c))  #Limites do eixo X
 # Grafico 1 ----------------------------------------------------------
 plt.subplot(2, 2, 1)
 
-for i in range(len(lista_alpha)):
-    alpha = lista_alpha[i]
-    plt.plot(pi_c, motor.Empuxo(), label=r'$\alpha = ${}'.format(alpha))
+for i in range(len(nivel_motor)):
+    Nivel_motor(nivel_motor[i])
+    plt.plot(pi_c, motor.Empuxo(), label=r'$tec. level = ${}'.format(nivel_motor[i]))
 
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
@@ -274,9 +344,9 @@ plt.grid()
 
 # Grafico 2 ----------------------------------------------------------
 plt.subplot(2, 2, 2)
-for i in range(len(lista_alpha)):
-    alpha = lista_alpha[i]
-    plt.plot(pi_c, motor.S()*1000000, label=r'$\alpha = ${}'.format(alpha))
+for i in range(len(nivel_motor)):
+    Nivel_motor(nivel_motor[i])
+    plt.plot(pi_c, motor.S()*1000000, label=r'$tec. level = ${}'.format(nivel_motor[i]))
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.ylim(15, 50)
@@ -287,9 +357,9 @@ plt.grid()
 
 # Grafico 3 ----------------------------------------------------------
 plt.subplot(2, 2, 3)
-for i in range(len(lista_alpha)):
-    alpha = lista_alpha[i]
-    plt.plot(pi_c, motor.F(), label=r'$\alpha = ${}'.format(alpha))
+for i in range(len(nivel_motor)):
+    Nivel_motor(nivel_motor[i])
+    plt.plot(pi_c, motor.F(), label=r'$tec. level = ${}'.format(nivel_motor[i]))
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
@@ -307,10 +377,13 @@ plt.show()
 
     
 # Tabela de saida:
-for j in range(len(lista_alpha)):
-    alpha = lista_alpha[j]
-    pi_c = pi_c_
+
+pi_c = pi_c_
+for i in range(len(nivel_motor)):
     print(" ")
+    Nivel_motor(nivel_motor[i])
+    print(" \t\tTEC LEVEL = {}".format(nivel_motor[i]))
+    print("|-------------------------------------------|")
     print("VALORES INICIAIS")
     dado = format(alpha, ".3f")
     print("%s\t\t%s\t\t%s" % ("| alpha",dado," "))

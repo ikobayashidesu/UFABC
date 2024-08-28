@@ -104,51 +104,79 @@ class Turbojato_real:
 
 def Nivel_motor(nivel):
     global t_t4, pi_dmax, pi_b, pi_n, e_c, e_t, n_b
-    if nivel == 0:
-        t_t4 = 1800        #[K]   
-        pi_dmax = 0.95
-        pi_b = 0.94
-        pi_n = 0.96
-        e_c = 0.9
-        e_t = 0.9
-        n_b = 0.98
-
-    elif nivel == 1:
-        t_t4 = 1390        #[K]   
+    if nivel == 0:        
         pi_dmax = 0.98
-        pi_b = 0.92
-        pi_n = 0.98
-        e_c = 0.84
-        e_t = 0.83
-        n_b = 0.91 
+        e_c = 0.92 
+        pi_b = 0.98
+        n_b = 0.99
+        e_t = 0.91 
+        pi_n = 0.98  
+        t_t4 = 1800
+        if convert:
+            t_t4 = t_t4/1.8 
+
+
+    elif nivel == 1:        
+        pi_dmax = 0.90  #ajustavel
+        e_t = 0.80  #ajustavel
+        pi_n = 0.95  #ajustavel
+
+        t_t4 = 1110 
+        pi_b = 0.90
+        e_c = 0.80
+        n_b = 0.85
+        if convert:
+            t_t4 = 2000 
+   
 
     elif nivel == 2:
-        t_t4 = 1390        #[K]   
-        pi_dmax = 0.98
+        pi_dmax = 0.95  #ajustavel
+        e_t = 0.85  #ajustavel
+        pi_n = 0.97  #ajustavel
+
+        t_t4 = 1390       
         pi_b = 0.92
-        pi_n = 0.98
         e_c = 0.84
-        e_t = 0.83
-        n_b = 0.91  
+        n_b = 0.91
+        if convert:
+            t_t4 = 2500 
+  
 
     elif nivel == 3:
-        t_t4 = 1390        #[K]   
-        pi_dmax = 0.98
-        pi_b = 0.92
-        pi_n = 0.98
-        e_c = 0.84
-        e_t = 0.83
-        n_b = 0.91   
+        pi_dmax = 0.94  #ajustavel
+        e_t = 0.87  #ajustavel
+        pi_n = 0.95  #ajustavel
+
+        t_t4 = 1780         
+        pi_b = 0.94
+        e_c = 0.88
+        n_b = 0.98
+        if convert:
+            t_t4 = 3200 
+     
+    
+    elif nivel == 4:
+        pi_dmax = 0.995  #ajustavel
+        e_t = 0.90  #ajustavel
+        pi_n = 0.995  #ajustavel
+
+        t_t4 = 2000         
+        pi_b = 0.95
+        e_c = 0.90
+        n_b = 0.99
+        if convert:
+            t_t4 = 3600
+
 
 
     
 #####################################################################################
 
 motor = Turbojato_real()
-nivel_motor = [0,2]
+nivel_motor = [3]
 
 # Variaveis de entrada:
-lista_m0 = [2]
+lista_m0 = [0.9]
 lista_pi_c = [2,30]
 
 # Constantes de entrada em SI:
@@ -157,11 +185,11 @@ c_pc = 1004        #[J/kg K]
 c_pt = 1239         #[J/kg K]
 h_pr = 42800000     #[J/kg]
 gamma_c = 1.4 
-gamma_t = 1.3 
+gamma_t = 1.3
 n_m = 0.99
-p_0Ip_9 = 0.5
-pi_c_ = 10
-m_0 = 2
+p_0Ip_9 = 1
+pi_c_ = 15.2
+m_0 = lista_m0[0]
 
 
 convert = False
@@ -253,8 +281,15 @@ for i in range(len(nivel_motor)):
     Nivel_motor(nivel_motor[i])
     plt.plot(pi_c, motor.Empuxo(), label=r'$tec. level = ${}'.format(nivel_motor[i])) 
 
+x_ = 7.38
+y_ = 950.049
+plt.axvline(x=x_, color='red', linestyle='--')
+plt.axhline(y=y_, color='red', linestyle='--')
+plt.scatter(x_, y_, color='red')
+plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
+
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(0, 1200)
+plt.ylim(0, 1800)
 plt.xlabel(r'$\pi_c$' , fontsize=15)
 plt.ylabel(r'$F/ \dot m$   $[N / (kg /s)]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -265,9 +300,16 @@ plt.subplot(2, 2, 2)
 for i in range(len(nivel_motor)):
     Nivel_motor(nivel_motor[i])
     plt.plot(pi_c, motor.S()*1000000, label=r'$tec. level = ${}'.format(nivel_motor[i]))
-            
+
+x_ = 15.2
+y_ = 40.05 
+plt.axvline(x=x_, color='red', linestyle='--')
+plt.axhline(y=y_, color='red', linestyle='--')
+plt.scatter(x_, y_, color='red')
+plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
+        
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(20, 60)
+plt.ylim(20, 80)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel(r'$S$   $[(mg/s) / N]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
