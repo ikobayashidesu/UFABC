@@ -232,27 +232,26 @@ def Nivel_motor(nivel):
 #####################################################################################
 
 motor = Turbofan_otimo_real()
-nivel_motor = [0]
+nivel_motor = [2]
 
 # Variaveis de entrada:
-lista_pi_f = [1.7]
-lista_pi_c = [2,40]
+lista_pi_f = [1.624,2,2.5,4]
+lista_pi_c = [2,100]
 
 # Constantes de entrada em SI:
 t_0 = 216.7         #[K]
-t_t4 = 1670       #[K]   
 c_pc = 1004     #[J/kg K]
-c_pt = 1096    #[J/kg K]
+c_pt = 1239    #[J/kg K]
 h_pr = 42800000     #[J/kg]
 
 gamma_c = 1.4 
-gamma_t = 1.35 
-pi_fn = 0.98
-n_m = 0.98
+gamma_t = 1.3 
+pi_fn = 0.97
+n_m = 0.99
 p_0Ip_9 = 1
 p_0Ip_19 = 1
-m_0 = 0.9
-pi_c_ = 30
+m_0 = 0.8
+pi_c_ = 24
 
 convert = False
 if convert:
@@ -349,21 +348,25 @@ pi_c = np.linspace(min(lista_pi_c) ,max(lista_pi_c))  #Limites do eixo X
 # Grafico 1 ----------------------------------------------------------
 plt.subplot(2, 2, 1)
 
+
 for i in range(len(lista_pi_f)):
     pi_f = lista_pi_f[i]
     for j in range(len(nivel_motor)):
         Nivel_motor(nivel_motor[j])
         plt.plot(pi_c, motor.Empuxo(), label=r'$\pi_f=${},lvl={}'.format(pi_f,nivel_motor[j]))
 
-# x_ = 5
-# y_ = 130.203  
-# plt.axvline(x=x_, color='red', linestyle='--')
-# plt.axhline(y=y_, color='red', linestyle='--')
-# plt.scatter(x_, y_, color='red')
-# plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
+
+y_ = 130
+plt.axhline(y=y_, color='red', linestyle='--')
+x_ = 14 
+plt.axvline(x=x_, color='red', linestyle='--')
+plt.scatter(x_, y_, color='red')
+plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
+
 
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.ylim(0, 300)
+plt.xlim(5, 40)
 plt.xlabel(r'$\pi_c$' , fontsize=15)
 plt.ylabel(r'$F/ \dot m$   $[N / (kg /s)]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -378,16 +381,21 @@ for i in range(len(lista_pi_f)):
         plt.plot(pi_c, motor.S()*1000000, label=r'$\pi_f=${},lvl={}'.format(pi_f,nivel_motor[j]))
 
 
-# x_ = 20
-# y_ = 28 
-# plt.axvline(x=x_, color='red', linestyle='--')
-# plt.axhline(y=y_, color='red', linestyle='--')
-# plt.scatter(x_, y_, color='red')
-# plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
+
+y_ = 28
+plt.axhline(y=y_, color='red', linestyle='--')
+x_ = 23
+plt.axvline(x=x_, color='red', linestyle='--')
+plt.scatter(x_, y_, color='red')
+plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='right', va='bottom')
+x_2 = 34
+plt.axvline(x=x_, color='red', linestyle='--')
+plt.scatter(x_2, y_, color='red')
+plt.text(x_2, y_, f'({x_2:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.ylim(20, 40)
-plt.xlim(5, 30)
+plt.xlim(5, 100)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel(r'$S$   $[(mg/s) / N]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -403,6 +411,7 @@ for i in range(len(lista_pi_f)):
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
+plt.xlim(5, 40)
 plt.ylabel(r'$f$' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
 plt.grid()
@@ -418,6 +427,7 @@ for i in range(len(lista_pi_f)):
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
 plt.ylim(0, 25)
+plt.xlim(5, 40)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel(r'$\alpha *$' , fontsize=15)
 plt.minorticks_on() # aparece a divisão

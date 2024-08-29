@@ -216,7 +216,6 @@ lista_pi_c = [2,40]
 
 # Constantes de entrada em SI:
 t_0 = 216.7         #[K]
-t_t4 = 1670       #[K]   
 c_pc = 1004     #[J/kg K]
 c_pt = 1096    #[J/kg K]
 h_pr = 42800000     #[J/kg]

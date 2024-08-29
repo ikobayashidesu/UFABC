@@ -168,7 +168,7 @@ def Nivel_motor(nivel):
             t_t7 = 3000    
 
     elif nivel == 3:
-        pi_dmax = 0.96  #ajustavel
+        pi_dmax = 0.94  #ajustavel
         e_t = 0.87  #ajustavel
         pi_n = 0.95  #ajustavel
 
@@ -205,29 +205,29 @@ def Nivel_motor(nivel):
 #####################################################################################
 
 motor = Turbojato_real_AB()
-nivel_motor = [0,2,3,4]
+nivel_motor = [3]
 
 # Variaveis de entrada:
-lista_m0 = [2]
+lista_m0 = [0.9]
 lista_pi_c = [2,14]
 
 # Constantes de entrada em SI:
 t_0 = 216.7         #[K]
-c_pc = 1004.835       #[J/kg K]
-c_pt = 1155.5568         #[J/kg K]
-c_pab = 1235.106    #[J/kg K]
-h_pr = 42798400     #[J/kg]
+c_pc = 1004      #[J/kg K]
+c_pt = 1239         #[J/kg K]
+c_pab = 239    #[J/kg K]
+h_pr = 42800000     #[J/kg]
 
 gamma_c = 1.4 
-gamma_t = 1.33
+gamma_t = 1.3
 gamma_ab = 1.3 
-n_m = 0.98
+n_m = 0.99
 p_0Ip_9 = 1
 pi_c_ = 14
 m_0 = lista_m0[0]
   
 
-convert = True
+convert = False
 if convert:
     # Constantes de entrada FORA do SI:
     t_0 = 390        #[R]
@@ -337,14 +337,14 @@ for i in range(len(nivel_motor)):
     plt.plot(pi_c, motor.Empuxo(), label=r'$tec. level = ${}'.format(nivel_motor[i]))
 
 # x_ = 2.28
-# y_ = 1250.136 
+y_ = 1250 
 # plt.axvline(x=x_, color='red', linestyle='--')
-# plt.axhline(y=y_, color='red', linestyle='--')
+plt.axhline(y=y_, color='red', linestyle='--')
 # plt.scatter(x_, y_, color='red')
 # plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
             
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(800, 2500)
+plt.ylim(0, 2500)
 plt.xlabel(r'$\pi_c$' , fontsize=15)
 plt.ylabel(r'$F/ \dot m$   $[N / (kg /s)]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
@@ -357,14 +357,14 @@ for i in range(len(nivel_motor)):
     plt.plot(pi_c, motor.S()*1000000, label=r'$tec. level = ${}'.format(nivel_motor[i]))
             
 # x_ = 1.565
-# y_ = 44.970 
+y_ = 45
 # plt.axvline(x=x_, color='red', linestyle='--')
-# plt.axhline(y=y_, color='red', linestyle='--')
+plt.axhline(y=y_, color='red', linestyle='--')
 # plt.scatter(x_, y_, color='red')
 # plt.text(x_, y_, f'({x_:.1f}, {y_:.1f})', fontsize=12, ha='left', va='bottom')
 
 plt.legend(bbox_to_anchor=(1.05, 1),loc='upper left', borderaxespad=0.)
-plt.ylim(45, 75)
+plt.ylim(0, 60)
 plt.xlabel(r'$\pi_c$ ' , fontsize=15)
 plt.ylabel(r'$S$   $[(mg/s) / N]$ ' , fontsize=15)
 plt.minorticks_on() # aparece a divisão
